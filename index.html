@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+		</script>
+	<script src="js/mqttws31.js" type="text/javascript"></script>
+	<link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/table.css"> 
+	<title>Event reporting</title>
+</head>
+<body>
+	<header class="cd-main-header">
+		<nav class="cd-main-nav js-main-nav">
+			<ul class="cd-main-nav__list js-signin-modal-trigger">
+				<!-- inser more links here -->
+				<li><a class="cd-main-nav__item cd-main-nav__item--signin" id="login-li" href="#0"
+						data-signin="login">Sign in</a></li>
+				<li><a class="cd-main-nav__item cd-main-nav__item--signup" id="registration-li" href="#0"
+						data-signin="signup">Sign up</a></li>
+				<li><a class="cd-main-nav__item cd-main-nav__item--signup logged" id="signout-li" id href="#0">Sign
+						out</a></li>
+			</ul>
+		</nav>
+	</header>
+	<div class="main-section">
+		<form class="cd-signin-modal__form" id="event-form">
+			<p class="cd-signin-modal__fieldset">
+				<label
+					class="cd-signin-modal__label cd-signin-modal__label--username cd-signin-modal__label--image-replace"
+					for="event-description">
+					Description</label>
+				<input
+					class="cd-signin-modal__input cd-signin-modal__input--full-width cd-signin-modal__input--has-padding cd-signin-modal__input--has-border"
+					id="event-description" type="text" placeholder="Description" required>
+				<span class="cd-signin-modal__error">Error message here!</span>
+			</p>
+
+			<p class="cd-signin-modal__fieldset">
+				<label
+					class="cd-signin-modal__label cd-signin-modal__label--username cd-signin-modal__label--image-replace"
+					for="event-address">
+					Address</label>
+				<input
+					class="cd-signin-modal__input cd-signin-modal__input--full-width cd-signin-modal__input--has-padding cd-signin-modal__input--has-border"
+					id="event-address" type="text" placeholder="Address" required>
+				<span class="cd-signin-modal__error">Error message here!</span>
+			</p>
+
+			<p class="cd-signin-modal__fieldset">
+				<select name="settlements" id="settlements-select"
+					class="cd-signin-modal__input cd-signin-modal__input--full-width cd-signin-modal__input--has-padding cd-signin-modal__input--has-border">
+					required
+				</select>
+				<span class="cd-signin-modal__error">Error message here!</span>
+			</p>
+
+			<p class="cd-signin-modal__fieldset">
+				<input
+					class="cd-signin-modal__input cd-signin-modal__input--full-width cd-signin-modal__input--has-padding"
+					type="submit" value="Create event">
+			</p>
+		</form>
+		<hr>
+		<h1>Events</h1>
+		<table class="responstable">
+			<thead>
+				<tr>
+					<th>Event</th>
+					<th width="25%">Address</th>
+					<th width="25%">Settlement</th>
+				</tr>
+			</thead>
+			<tbody id="tableData"></tbody>
+		</table>
+	</div>
+	<!-- Modals section -->
+	<div class="cd-signin-modal js-signin-modal" id="user-modal">
+		<!-- this is the entire modal form, including the background -->
+		<div class="cd-signin-modal__container">
+			<!-- this is the container wrapper -->
+			<ul class="cd-signin-modal__switcher js-signin-modal-switcher js-signin-modal-trigger">
+				<li><a href="#0" data-signin="login" data-type="login">Sign in</a></li>
+				<li><a href="#0" data-signin="signup" data-type="signup">New account</a></li>
+			</ul>
+
+			<!-- LOG IN form -->
+			<div class="cd-signin-modal__block js-signin-modal-block" id="login-div" data-type="login">
+				<form class="cd-signin-modal__form" id="login-form">
+					<p class="cd-signin-modal__fieldset">
+						<label
+							class="cd-signin-modal__label cd-signin-modal__label--email cd-signin-modal__label--image-replace"
+							for="signin-email">E-mail</label>
+						<input
+							class="cd-signin-modal__input cd-signin-modal__input--full-width cd-signin-modal__input--has-padding cd-signin-modal__input--has-border"
+							id="signin-email" type="email" placeholder="E-mail" required>
+						<span class="cd-signin-modal__error">Error message here!</span>
+					</p>
+
+					<p class="cd-signin-modal__fieldset">
+						<label
+							class="cd-signin-modal__label cd-signin-modal__label--password cd-signin-modal__label--image-replace"
+							for="signin-password">Password</label>
+						<input
+							class="cd-signin-modal__input cd-signin-modal__input--full-width cd-signin-modal__input--has-padding cd-signin-modal__input--has-border"
+							id="signin-password" type="text" placeholder="Password" required>
+						<a href="#0" class="cd-signin-modal__hide-password js-hide-password">Hide</a>
+						<span class="cd-signin-modal__error">Error message here!</span>
+					</p>
+
+					<p class="cd-signin-modal__fieldset">
+						<input class="cd-signin-modal__input cd-signin-modal__input--full-width" type="submit"
+							value="Login">
+					</p>
+				</form>
+			</div>
+			<!-- cd-signin-modal__block -->
+
+			<!-- SIGN UP form -->
+			<div class="cd-signin-modal__block js-signin-modal-block" data-type="signup">
+				<form class="cd-signin-modal__form" id="registration-form">
+					<p class="cd-signin-modal__fieldset">
+						<label
+							class="cd-signin-modal__label cd-signin-modal__label--username cd-signin-modal__label--image-replace"
+							for="signup-first-name">
+							First name</label>
+						<input
+							class="cd-signin-modal__input cd-signin-modal__input--full-width cd-signin-modal__input--has-padding cd-signin-modal__input--has-border"
+							id="signup-first-name" type="text" placeholder="First name" required>
+						<span class="cd-signin-modal__error">Error message here!</span>
+					</p>
+
+					<p class="cd-signin-modal__fieldset">
+						<label
+							class="cd-signin-modal__label cd-signin-modal__label--username cd-signin-modal__label--image-replace"
+							for="signup-last-name">
+							Last name</label>
+						<input
+							class="cd-signin-modal__input cd-signin-modal__input--full-width cd-signin-modal__input--has-padding cd-signin-modal__input--has-border"
+							id="signup-last-name" type="text" placeholder="Last name" required>
+						<span class="cd-signin-modal__error">Error message here!</span>
+					</p>
+
+
+					<p class="cd-signin-modal__fieldset">
+						<label
+							class="cd-signin-modal__label cd-signin-modal__label--username cd-signin-modal__label--image-replace"
+							for="signup-pin">
+							PIN</label>
+						<input
+							class="cd-signin-modal__input cd-signin-modal__input--full-width cd-signin-modal__input--has-padding cd-signin-modal__input--has-border"
+							id="signup-pin" type="text" placeholder="PIN" required>
+						<span class="cd-signin-modal__error">Error message here!</span>
+					</p>
+
+					<p class="cd-signin-modal__fieldset">
+						<label
+							class="cd-signin-modal__label cd-signin-modal__label--email cd-signin-modal__label--image-replace"
+							for="signup-email">
+							E-mail</label>
+						<input
+							class="cd-signin-modal__input cd-signin-modal__input--full-width cd-signin-modal__input--has-padding cd-signin-modal__input--has-border"
+							id="signup-email" type="email" placeholder="E-mail" required>
+						<span class="cd-signin-modal__error">Error message here!</span>
+					</p>
+
+					<p class="cd-signin-modal__fieldset">
+						<label
+							class="cd-signin-modal__label cd-signin-modal__label--password cd-signin-modal__label--image-replace"
+							for="signup-password">
+							Password</label>
+						<input
+							class="cd-signin-modal__input cd-signin-modal__input--full-width cd-signin-modal__input--has-padding cd-signin-modal__input--has-border"
+							id="signup-password" type="text" placeholder="Password" required>
+						<a href="#0" class="cd-signin-modal__hide-password js-hide-password">Hide</a>
+						<span class="cd-signin-modal__error">Error message here!</span>
+					</p>
+					<p class="cd-signin-modal__fieldset">
+						<input
+							class="cd-signin-modal__input cd-signin-modal__input--full-width cd-signin-modal__input--has-padding"
+							type="submit" value="Create account">
+					</p>
+				</form>
+			</div>
+			<!-- cd-signin-modal__block -->
+			<a href="#0" class="cd-signin-modal__close js-close">Close</a>
+		</div> <!-- cd-signin-modal__container -->
+	</div> <!-- cd-signin-modal -->
+
+	<script src="js/placeholders.min.js"></script>
+	<script src="js/modal.js"></script>
+	<script src="js/main.js"></script>
+	<!-- <script src="js/mqtt-example.js"></script> -->
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script> -->
+	<!-- <script data-main="js/main.js" src="js/require.js"></script> -->
+</body>
+</html>
